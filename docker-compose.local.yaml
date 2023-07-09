@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db_redis:
+    image: redis:6.2.11-alpine
+    env_file:
+      - ./.env
+    ports:
+      - "6379:6379"
+    volumes:
+      - linebot-felice-volumes-redis:/data
+    environment:
+      - REDIS_CACHE=true
+    networks:
+      - linebot-felice-network
+
+  linebot:
+    build:
+      context: ./linebot
+      dockerfile: Dockerfile
+    ports: 
+      - "5000:5000"
+    env_file:
+      - ./.env
+    environment:
+      - CACHE_URL=db_redis:6379
+    depends_on:
+      - db_redis
+    networks:
+      - linebot-felice-network
+
+networks:
+  linebot-felice-network:
+    driver: bridge
+
+volumes:
+  linebot-felice-volumes-redis:
+    driver: local
