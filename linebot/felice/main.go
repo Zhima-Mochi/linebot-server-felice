@@ -2,7 +2,8 @@ package main
 
 import (
 	"linebot-server-felice/config"
-	"linebot-server-felice/handlers/messagecore"
+	messagecore "linebot-server-felice/handlers/felicecore"
+	memory "linebot-server-felice/handlers/memory"
 	"log"
 	"net/http"
 	"os"
@@ -15,12 +16,8 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-var (
-	cfg = config.Config{}
-)
-
-func init() {
-	cfg = config.Config{
+func main() {
+	cfg := config.Config{
 		LineChannelSecret: os.Getenv("LINE_CHANNEL_SECRET"),
 		LineChannelToken:  os.Getenv("LINE_CHANNEL_TOKEN"),
 		OpenaiAPIKey:      os.Getenv("OPENAI_API_KEY"),
@@ -28,21 +25,21 @@ func init() {
 		LinebotPort:       os.Getenv("LINEBOT_PORT"),
 		LineAdminUserID:   os.Getenv("LINE_ADMIN_USER_ID"),
 	}
-
-}
-
-func main() {
 	client, err := linebot.New(cfg.LineChannelSecret, cfg.LineChannelToken)
 	if err != nil {
 		panic(err)
 	}
 
 	openaiClient := openai.NewClient(cfg.OpenaiAPIKey)
-	chatgptCore := chatgpt.NewMessageCore(openaiClient)
+	memoryHandler := memory.NewMemory()
+	chatgptCoreWithOptions := []chatgpt.WithOption{
+		chatgpt.WithMemory(memoryHandler),
+	}
+	chatgptCore := chatgpt.NewMessageCore(openaiClient, chatgptCoreWithOptions...)
 
 	echoCore := echo.NewMessageCore()
 
-	msgCoreHandler := messagecore.NewMessageCore(chatgptCore, echoCore)
+	msgCoreHandler := messagecore.NewMessageCore(chatgptCore, echoCore, cfg.LineAdminUserID)
 	msgService := messageservice.NewMessageService()
 	msgService.SetDefaultMessageCore(msgCoreHandler)
 

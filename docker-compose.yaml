@@ -15,9 +15,7 @@ services:
       - linebot-felice-network
 
   linebot:
-    build:
-      context: ./linebot
-      dockerfile: Dockerfile
+    image: zhima1mochi2:linebot-felice
     ports: 
       - "${LINEBOT_PORT}:${LINEBOT_PORT}"
     env_file:

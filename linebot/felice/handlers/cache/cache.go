@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -94,4 +95,35 @@ func (h *CacheHandler) HGet(ctx context.Context, key string, field string, v int
 
 func (h *CacheHandler) Expire(ctx context.Context, key string, ttl time.Duration) error {
 	return h.cache.Expire(ctx, key, ttl).Err()
+}
+
+func (h *CacheHandler) LPush(ctx context.Context, key string, v interface{}) error {
+	data, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	return h.cache.LPush(ctx, key, data).Err()
+}
+
+func (h *CacheHandler) LRange(ctx context.Context, key string, start int64, stop int64, v interface{}) error {
+	res, err := h.cache.LRange(ctx, key, start, stop).Result()
+	if err == redis.Nil {
+		return fmt.Errorf("key not found")
+	} else if err != nil {
+		return err
+	}
+	var values []interface{}
+	for _, r := range res {
+		var value interface{}
+		if err := json.Unmarshal([]byte(r), &value); err != nil {
+			return err
+		}
+		values = append(values, value)
+	}
+	reflect.ValueOf(v).Elem().Set(reflect.ValueOf(values))
+	return nil
+}
+
+func (h *CacheHandler) LTrim(ctx context.Context, key string, start int64, stop int64) error {
+	return h.cache.LTrim(ctx, key, start, stop).Err()
 }
