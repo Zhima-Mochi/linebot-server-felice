@@ -2,7 +2,6 @@ package messagecore
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/Zhima-Mochi/go-linebot-service/messageservice/messagecorefactory"
@@ -10,7 +9,7 @@ import (
 )
 
 var (
-	waitingMessageEvent = linebot.NewTextMessage("⏳ Please wait a moment.")
+	StopMessageEvent = linebot.NewTextMessage("⏰ Timeout. Please try again.")
 )
 
 type feliceCore struct {
@@ -44,11 +43,8 @@ func (fc *feliceCore) Process(ctx context.Context, event *linebot.Event) (linebo
 
 		for {
 			select {
-			case <-time.After(5 * time.Second):
-				err := fc.sendWaitingMessage(ctx, event)
-				if err != nil {
-					log.Print(err)
-				}
+			case <-time.After(10 * time.Second):
+				return StopMessageEvent, nil
 			case <-waitCh:
 				return sendingMessage, err
 			}
@@ -65,9 +61,4 @@ func (fc *feliceCore) isAdmin(userID string) bool {
 		}
 	}
 	return false
-}
-
-func (fc *feliceCore) sendWaitingMessage(ctx context.Context, event *linebot.Event) error {
-	_, err := fc.linebotClient.ReplyMessage(event.ReplyToken, waitingMessageEvent).WithContext(ctx).Do()
-	return err
 }
