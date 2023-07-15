@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -83,7 +82,7 @@ func (h *CacheHandler) HSet(ctx context.Context, key string, field string, v int
 func (h *CacheHandler) HGet(ctx context.Context, key string, field string, v interface{}) error {
 	res, err := h.cache.HGet(ctx, key, field).Result()
 	if err == redis.Nil {
-		return fmt.Errorf("key not found")
+		return fmt.Errorf("key '%s' not found", key)
 	} else if err != nil {
 		return err
 	}
@@ -105,25 +104,29 @@ func (h *CacheHandler) LPush(ctx context.Context, key string, v interface{}) err
 	return h.cache.LPush(ctx, key, data).Err()
 }
 
-func (h *CacheHandler) LRange(ctx context.Context, key string, start int64, stop int64, v interface{}) error {
-	res, err := h.cache.LRange(ctx, key, start, stop).Result()
-	if err == redis.Nil {
-		return fmt.Errorf("key not found")
-	} else if err != nil {
+func (h *CacheHandler) RPush(ctx context.Context, key string, v interface{}) error {
+	data, err := json.Marshal(v)
+	if err != nil {
 		return err
 	}
-	var values []interface{}
-	for _, r := range res {
-		var value interface{}
-		if err := json.Unmarshal([]byte(r), &value); err != nil {
-			return err
-		}
-		values = append(values, value)
+	return h.cache.RPush(ctx, key, data).Err()
+}
+
+func (h *CacheHandler) LRange(ctx context.Context, key string, start int64, stop int64) ([]string, error) {
+	res, err := h.cache.LRange(ctx, key, start, stop).Result()
+	if err == redis.Nil {
+		return nil, fmt.Errorf("key '%s' not found", key)
+	} else if err != nil {
+		return nil, fmt.Errorf("failed to retrieve values for key '%s': %v", key, err)
 	}
-	reflect.ValueOf(v).Elem().Set(reflect.ValueOf(values))
-	return nil
+
+	return res, nil
 }
 
 func (h *CacheHandler) LTrim(ctx context.Context, key string, start int64, stop int64) error {
 	return h.cache.LTrim(ctx, key, start, stop).Err()
+}
+
+func (h *CacheHandler) LLen(ctx context.Context, key string) (int64, error) {
+	return h.cache.LLen(ctx, key).Result()
 }

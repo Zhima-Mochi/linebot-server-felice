@@ -6,7 +6,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - "${CACHE_PORT}:${CACHE_PORT}"
+      - "${CACHE_PORT}:6379"
     volumes:
       - linebot-felice-volumes-redis:/data
     environment:
@@ -15,7 +15,7 @@ services:
       - linebot-felice-network
 
   linebot:
-    image: zhima1mochi2:linebot-felice
+    image: zhima1mochi2/linebot-felice
     ports: 
       - "${LINEBOT_PORT}:${LINEBOT_PORT}"
     env_file:
