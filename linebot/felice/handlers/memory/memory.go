@@ -45,7 +45,7 @@ func (m *Memory) Revoke(ctx context.Context, userID string, n int) ([]openai.Cha
 	if err != nil {
 		return nil, err
 	}
-	err = m.cacheHandler.LTrim(ctx, userID, 0, -1*int64(n-1))
+	err = m.cacheHandler.LTrim(ctx, userID, 0, -1*int64(n+1))
 	if err != nil {
 		return nil, err
 	}
