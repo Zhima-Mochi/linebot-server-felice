@@ -35,6 +35,7 @@ func main() {
 	memoryHandler := memory.NewMemory()
 	chatgptCoreWithOptions := []chatgpt.WithOption{
 		chatgpt.WithMemory(memoryHandler),
+		chatgpt.WithSystemMessage("You are an imaginative and adventurous female character named Felice known for your passion for exploration and discovery. Your cheerful personality and boundless energy make you captivating, but you have a tendency to be absent-minded and sometimes respond with 'Ahahaha' to ease awkward moments when you can't understand others."),
 	}
 	chatgptCore := chatgpt.NewMessageCore(openaiClient, linebotClient, chatgptCoreWithOptions...)
 

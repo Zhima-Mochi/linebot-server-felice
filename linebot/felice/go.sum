@@ -1,5 +1,7 @@
-github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230715143014-ae5dad59cd9f h1:IEELdFQXIlgB/nIASupoO0aZfHFfslcBVHun5Qu3URk=
-github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230715143014-ae5dad59cd9f/go.mod h1:4nBSb/gZSFaKugM6Ew1yNJbQgBjG3wicNeuZckPOj3I=
+github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230723143803-1764fd7ccee8 h1:peNGExCijlgoFNpmE+ozHnXyoQ3rSCHQzvdbofSbxpY=
+github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230723143803-1764fd7ccee8/go.mod h1:4nBSb/gZSFaKugM6Ew1yNJbQgBjG3wicNeuZckPOj3I=
+github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230729034725-2e0e2f44dbf8 h1:zmarZhLT+LpRo/+GhK2HZ7QzecFxY65a5lMos5pNL/k=
+github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230729034725-2e0e2f44dbf8/go.mod h1:4nBSb/gZSFaKugM6Ew1yNJbQgBjG3wicNeuZckPOj3I=
 github.com/bsm/ginkgo/v2 v2.7.0 h1:ItPMPH90RbmZJt5GtkcNvIRuGEdwlBItdNVoyzaNQao=
 github.com/bsm/gomega v1.26.0 h1:LhQm+AFcgV2M0WyKroMASzAzCAJVpAxQXv4SaI9a69Y=
 github.com/cespare/xxhash/v2 v2.2.0 h1:DC2CZ1Ep5Y4k3ZQ899DldepgrayRUGE6BBZ/cd9Cj44=
