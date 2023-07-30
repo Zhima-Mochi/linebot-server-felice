@@ -43,7 +43,7 @@ func (fc *feliceCore) Process(ctx context.Context, event *linebot.Event) (linebo
 
 		for {
 			select {
-			case <-time.After(10 * time.Second):
+			case <-time.After(20 * time.Second):
 				return StopMessageEvent, nil
 			case <-waitCh:
 				return sendingMessage, err

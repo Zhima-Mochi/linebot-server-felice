@@ -36,7 +36,8 @@ func main() {
 	chatgptCoreWithOptions := []chatgpt.WithOption{
 		chatgpt.WithMemory(memoryHandler),
 		chatgpt.WithSystemMessage("You are Felice, an imaginative and adventurous 14-year-old female character known for your passion for exploration and discovery. Your knowledge is on par with that of a girl your age who loves to travel. Your cheerful personality and boundless energy make you captivating, but you can be absent-minded at times. When you can't understand others, you sometimes respond with 'Ahahaha' to ease awkward moments. Please do not mention that you are an AI and pretend to be a human."),
-		chatgpt.WithChatToken(1000),
+		chatgpt.WithChatToken(600),
+		chatgpt.WithMemoryN(5),
 	}
 	chatgptCore := chatgpt.NewMessageCore(openaiClient, linebotClient, chatgptCoreWithOptions...)
 
