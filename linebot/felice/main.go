@@ -19,12 +19,13 @@ import (
 
 func main() {
 	cfg := config.Config{
-		LineChannelSecret:   os.Getenv("LINE_CHANNEL_SECRET"),
-		LineChannelToken:    os.Getenv("LINE_CHANNEL_TOKEN"),
-		OpenaiAPIKey:        os.Getenv("OPENAI_API_KEY"),
-		CacheURL:            os.Getenv("CACHE_URL"),
-		LinebotPort:         os.Getenv("LINEBOT_PORT"),
-		LineAdminUserIDList: strings.Split(os.Getenv("LINE_ADMIN_USER_ID_LIST"), ","),
+		LineChannelSecret:      os.Getenv("LINE_CHANNEL_SECRET"),
+		LineChannelToken:       os.Getenv("LINE_CHANNEL_TOKEN"),
+		OpenaiAPIKey:           os.Getenv("OPENAI_API_KEY"),
+		CacheURL:               os.Getenv("CACHE_URL"),
+		LinebotPort:            os.Getenv("LINEBOT_PORT"),
+		LineAdminUserIDList:    strings.Split(os.Getenv("LINE_ADMIN_USER_ID_LIST"), ","),
+		LineCustomerUserIDList: strings.Split(os.Getenv("LINE_CUSTOMER_USER_ID_LIST"), ","),
 	}
 	linebotClient, err := linebot.New(cfg.LineChannelSecret, cfg.LineChannelToken)
 	if err != nil {
@@ -43,7 +44,7 @@ func main() {
 
 	echoCore := echo.NewMessageCore()
 
-	msgCoreHandler := messagecore.NewMessageCore(linebotClient, chatgptCore, echoCore, cfg.LineAdminUserIDList)
+	msgCoreHandler := messagecore.NewMessageCore(linebotClient, chatgptCore, echoCore, cfg.LineAdminUserIDList, cfg.LineCustomerUserIDList)
 	msgService := messageservice.NewMessageService()
 	msgService.SetDefaultMessageCore(msgCoreHandler)
 

@@ -130,3 +130,7 @@ func (h *CacheHandler) LTrim(ctx context.Context, key string, start int64, stop 
 func (h *CacheHandler) LLen(ctx context.Context, key string) (int64, error) {
 	return h.cache.LLen(ctx, key).Result()
 }
+
+func (h *CacheHandler) IncrBy(ctx context.Context, key string, value int64) (int64, error) {
+	return h.cache.IncrBy(ctx, key, value).Result()
+}
