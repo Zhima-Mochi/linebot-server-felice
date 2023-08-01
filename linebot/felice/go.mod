@@ -3,7 +3,7 @@ module linebot-server-felice
 go 1.19
 
 require (
-	github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230731145946-04b1fc75ea6f
+	github.com/Zhima-Mochi/go-linebot-service v0.0.0-20230731151104-66aaee729c78
 	github.com/line/line-bot-sdk-go/v7 v7.20.0
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/sashabaranov/go-openai v1.13.0
