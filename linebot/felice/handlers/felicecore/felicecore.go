@@ -3,6 +3,7 @@ package messagecore
 import (
 	"context"
 	"linebot-server-felice/handlers/cache"
+	"log"
 	"time"
 
 	"github.com/Zhima-Mochi/go-linebot-service/messageservice/messagecorefactory"
@@ -24,11 +25,12 @@ type feliceCore struct {
 
 func NewMessageCore(linebotClient *linebot.Client, chatgptCore, echoCore messagecorefactory.MessageCore, lineAdminUserIDList, lineCustomerUserIDList []string) messagecorefactory.MessageCore {
 	core := &feliceCore{
-		linebotClient:       linebotClient,
-		chatgptCore:         chatgptCore,
-		echoCore:            echoCore,
-		lineAdminUserIDList: lineAdminUserIDList,
-		cacheHandler:        cache.NewCacheHandler(),
+		linebotClient:          linebotClient,
+		chatgptCore:            chatgptCore,
+		echoCore:               echoCore,
+		lineAdminUserIDList:    lineAdminUserIDList,
+		lineCustomerUserIDList: lineCustomerUserIDList,
+		cacheHandler:           cache.NewCacheHandler(),
 	}
 	return core
 }
@@ -54,7 +56,10 @@ func (fc *feliceCore) Process(ctx context.Context, event *linebot.Event) (linebo
 			}
 		}
 	} else if fc.isCustomer(userID) {
-		if _, err := fc.cacheHandler.SetNX(ctx, "customer:"+userID, "1", 60*time.Second); err != nil {
+		if ok, err := fc.cacheHandler.SetNX(ctx, "customer:"+userID, "1", 15*time.Second); err != nil {
+			log.Fatal(err)
+			return nil, err
+		} else if !ok {
 			return fc.echoCore.Process(ctx, event)
 		} else {
 			go func() {
